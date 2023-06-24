@@ -2,13 +2,24 @@
 //Source: https://www.ee-diary.com
 #include <Servo.h>
 
-//alias pin name for Photodiode
+#define DIFF_MULTI  3
+// ### Pins ###
 int sensor1 = A0;
 int sensor2 = A1;
 int greenLedPin = 5;
-int i;
+int servoPin = 3;
 
+int i;
 Servo s1;
+
+int  clampInt(int n, int min, int max)
+{
+  if (n < min)
+    return (min);
+  if (n > max)
+    return (max);
+  return (n);
+}
 
 void setup(){
   Serial.begin(9600); //set Serial output baud rate
@@ -16,8 +27,8 @@ void setup(){
   Serial.println("\nVoltage(V):");
   Serial.print("--------------------------------------------------\n");
   i = 0;
-  s1.attach(3);
-  s1.write(90);
+  s1.attach(servoPin);
+  s1.write(90); //reset Servo to neutral position
 }
 
 void loop() {
@@ -26,9 +37,9 @@ void loop() {
 
     float voltage = 5-(anaValue/1024.0)*5;
     float secondVoltage = 5-(ana2Value/1024.0)*5;
-    s1.write(90 - (anaValue - ana2Value) * 3);
+    s1.write(clampInt((ana2Value - anaValue) * DIFF_MULTI + 90), 0, 180);
     analogWrite(greenLedPin, i++ % 6);
-    Serial.println(String(voltage,2)+"V  | AnaVal:"+String(anaValue, 10));
-    Serial.println(String(secondVoltage,2)+"V  | Ana2Val:"+String(ana2Value, 10));
-    delay(100); //delay 2000ms to prevent any duplicates
+    Serial.println(String(voltage,2)+"V  | AnaVal:"+String(anaValue, 10)+"\n"+String(secondVoltage,2)+"V  | Ana2Val:"+String(ana2Value, 10));
+  
+    delay(100);
 }

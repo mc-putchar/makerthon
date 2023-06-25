@@ -32,6 +32,9 @@ void setup(){
   i = 0;
   s1.attach(servoPin);
   s1.write(90); //reset Servo to neutral position
+  pinMode(sensor1, INPUT_PULLUP);
+  pinMode(sensor2, INPUT_PULLUP);
+  pinMode(sensor3, INPUT_PULLUP);
 }
 
 void loop() {
@@ -52,5 +55,5 @@ void loop() {
       analogWrite(rightLedPin, 5);
     Serial.println(String(voltage,2)+"V  | AnaVal:"+String(anaValue, 10)+"   "+String(secondVoltage,2)+"V  | Ana2Val:"+String(ana2Value, 10)+"   "+String(thirdVoltage,2)+"V  | Ana3Val: "+String(ana3Value, 10));
   
-    delay(100);
+    delay(300);
 }

@@ -6,10 +6,11 @@
 // ### Pins ###
 int sensor1 = A0;
 int sensor2 = A1;
+int sensor3 = A2;
 int greenLedPin = 5;
 int servoPin = 3;
 
-int i;
+unsigned int i;
 Servo s1;
 
 int  clampInt(int n, int min, int max)
@@ -34,12 +35,14 @@ void setup(){
 void loop() {
     int anaValue = analogRead(sensor1); // potentiometer voltage
     int ana2Value = analogRead(sensor2);
+    int ana3Value = analogRead(sensor3);
 
     float voltage = 5-(anaValue/1024.0)*5;
     float secondVoltage = 5-(ana2Value/1024.0)*5;
-    s1.write(clampInt((ana2Value - anaValue) * DIFF_MULTI + 90), 0, 180);
+    float thirdVoltage = 5-(ana2Value/1024.0)*5;
+    s1.write(clampInt(((ana2Value - anaValue) * DIFF_MULTI + 90), 0, 180));
     analogWrite(greenLedPin, i++ % 6);
-    Serial.println(String(voltage,2)+"V  | AnaVal:"+String(anaValue, 10)+"\n"+String(secondVoltage,2)+"V  | Ana2Val:"+String(ana2Value, 10));
+    Serial.println(String(voltage,2)+"V  | AnaVal:"+String(anaValue, 10)+"   "+String(secondVoltage,2)+"V  | Ana2Val:"+String(ana2Value, 10)+"   "+String(thirdVoltage,2)+"V  | Ana3Val: "+String(ana3Value, 10));
   
-    delay(100);
+    delay(500);
 }

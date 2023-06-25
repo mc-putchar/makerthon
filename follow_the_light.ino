@@ -8,6 +8,8 @@ int sensor1 = A0;
 int sensor2 = A1;
 int sensor3 = A2;
 int greenLedPin = 5;
+int rightLedPin = 6;
+int leftLedPin = 11;
 int servoPin = 3;
 
 unsigned int i;
@@ -42,7 +44,13 @@ void loop() {
     float thirdVoltage = 5-(ana2Value/1024.0)*5;
     s1.write(clampInt(((ana2Value - anaValue) * DIFF_MULTI + 90), 0, 180));
     analogWrite(greenLedPin, i++ % 6);
+    analogWrite(leftLedPin, 0);
+    analogWrite(rightLedPin, 0);
+    if (ana2Value < anaValue)
+      analogWrite(leftLedPin, 5);
+    else if (ana2Value > anaValue)
+      analogWrite(rightLedPin, 5);
     Serial.println(String(voltage,2)+"V  | AnaVal:"+String(anaValue, 10)+"   "+String(secondVoltage,2)+"V  | Ana2Val:"+String(ana2Value, 10)+"   "+String(thirdVoltage,2)+"V  | Ana3Val: "+String(ana3Value, 10));
   
-    delay(500);
+    delay(100);
 }
